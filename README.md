@@ -39,13 +39,27 @@ installiert ist, faellt das Skript auf PyMuPDF-Rendering zurueck.
 ## Verwendung
 
 ```sh
-.venv/bin/python pdf_a5_cutstack_auto_signature_flatten_v2.py input.pdf output.pdf
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py input.pdf output.pdf
 ```
 
 Beispiel:
 
 ```sh
-.venv/bin/python pdf_a5_cutstack_auto_signature_flatten_v2.py manual.pdf out/manual_cutstack.pdf
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py manual.pdf out/manual_cutstack.pdf
+```
+
+Alternativ kann nur ein Ausgabeordner angegeben werden. Dann schreibt das
+Skript die Datei automatisch als `<eingabename>_cutstack.pdf`:
+
+```sh
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py manual.pdf --outdir out
+```
+
+Bei Dateinamen oder Ordnern mit Leerzeichen die Pfade in Anfuehrungszeichen
+setzen:
+
+```sh
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py "MD11-AFM-00-001-I01 R02_JS-MD 3 RES Powered Aircraft Flight Manual_signed.pdf" --outdir "out"
 ```
 
 ## Drucken

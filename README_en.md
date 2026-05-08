@@ -35,13 +35,26 @@ script falls back to PyMuPDF rendering.
 ## Usage
 
 ```sh
-.venv/bin/python pdf_a5_cutstack_auto_signature_flatten_v2.py input.pdf output.pdf
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py input.pdf output.pdf
 ```
 
 Example:
 
 ```sh
-.venv/bin/python pdf_a5_cutstack_auto_signature_flatten_v2.py manual.pdf out/manual_cutstack.pdf
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py manual.pdf out/manual_cutstack.pdf
+```
+
+Alternatively, pass only an output directory. The script then writes the output
+PDF as `<input-name>_cutstack.pdf`:
+
+```sh
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py manual.pdf --outdir out
+```
+
+If file or folder names contain spaces, quote the paths:
+
+```sh
+.venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py "MD11-AFM-00-001-I01 R02_JS-MD 3 RES Powered Aircraft Flight Manual_signed.pdf" --outdir "out"
 ```
 
 ## Printing

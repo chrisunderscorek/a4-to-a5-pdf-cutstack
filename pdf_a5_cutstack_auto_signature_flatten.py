@@ -6,14 +6,18 @@ Use case:
     Turn A4 documentation into A5 print output on A4 landscape paper.
 
 Default use:
-    python pdf_a5_cutstack_auto_signature_flatten_v2.py input.pdf output.pdf
+    python pdf_a5_cutstack_auto_signature_flatten.py input.pdf output.pdf
+
+Automatic output filename:
+    python pdf_a5_cutstack_auto_signature_flatten.py input.pdf --outdir out
+    # writes out/input_cutstack.pdf
 
 Local Python virtual environment setup:
     python3 -m venv .venv
     .venv/bin/python -m pip install pymupdf
 
 Run with the local virtual environment:
-    .venv/bin/python pdf_a5_cutstack_auto_signature_flatten_v2.py input.pdf output.pdf
+    .venv/bin/python pdf_a5_cutstack_auto_signature_flatten.py input.pdf output.pdf
 
 What it does by default:
   1. Opens input.pdf and checks every page for PDF signature widgets/fields.
@@ -463,6 +467,11 @@ def process_pdf(
         )
 
 
+def output_path_from_outdir(input_pdf: Path, outdir: Path) -> Path:
+    """Build the default cut-stack output path for an input PDF and output directory."""
+    return Path(outdir) / f"{Path(input_pdf).stem}_cutstack.pdf"
+
+
 def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -471,7 +480,18 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
         )
     )
     parser.add_argument("input", type=Path, help="Input PDF, normally A5 portrait")
-    parser.add_argument("output", type=Path, help="Output PDF")
+    parser.add_argument(
+        "output",
+        type=Path,
+        nargs="?",
+        help="Output PDF. Omit this when using --outdir.",
+    )
+    parser.add_argument(
+        "--outdir",
+        type=Path,
+        default=None,
+        help="Output directory. Writes <input-name>_cutstack.pdf there.",
+    )
     parser.add_argument(
         "--mode",
         choices=["cutstack", "flatten"],
@@ -496,7 +516,14 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
         default=None,
         help="Optional path to keep the intermediate original-order PDF with signature pages rasterized.",
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.output is None and args.outdir is None:
+        parser.error("provide either an output PDF path or --outdir")
+    if args.output is not None and args.outdir is not None:
+        parser.error("use either an output PDF path or --outdir, not both")
+    if args.outdir is not None:
+        args.output = output_path_from_outdir(args.input, args.outdir)
+    return args
 
 
 def main(argv: Optional[Iterable[str]] = None) -> int:
